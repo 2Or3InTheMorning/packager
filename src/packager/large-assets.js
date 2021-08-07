@@ -2,6 +2,8 @@
 const LARGE_ASSET_BASE = process.env.LARGE_ASSET_BASE;
 const SCAFFOLDING_ROOT = 'scaffolding/';
 
+const standaloneAsset = (path) => `data:application/javascript,${encodeURIComponent(__ASSETS__[path])}`;
+
 // Use old nodejs exports so that this can be referenced easily from node
 module.exports = {
   'nwjs-win64': {
@@ -25,19 +27,19 @@ module.exports = {
     type: 'arraybuffer'
   },
   scaffolding: {
-    src: SCAFFOLDING_ROOT + 'scaffolding.js',
+    src: standaloneAsset(SCAFFOLDING_ROOT + 'scaffolding.js'),
     estimatedSize: 4775503,
     useBuildId: true,
     type: 'text'
   },
   'scaffolding-min': {
-    src: SCAFFOLDING_ROOT + 'scaffolding-min.js',
+    src: standaloneAsset(SCAFFOLDING_ROOT + 'scaffolding-min.js'),
     estimatedSize: 2400000, // TODO
     useBuildId: true,
     type: 'text'
   },
   addons: {
-    src: SCAFFOLDING_ROOT + 'addons.js',
+    src: standaloneAsset(SCAFFOLDING_ROOT + 'addons.js'),
     estimatedSize: 14339,
     useBuildId: true,
     type: 'text'

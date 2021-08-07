@@ -12,6 +12,7 @@ const base = {
 };
 const dist = path.resolve(__dirname, 'dist');
 const buildId = isProduction ? require('./src/build/generate-scaffolding-build-id') : null;
+const inlineWorkerLoaderModules = [path.resolve(__dirname, 'src', 'build', 'inline-worker-loader'), 'node_modules'];
 
 const makeScaffolding = ({full}) => ({
   ...base,
@@ -71,8 +72,7 @@ const makeScaffolding = ({full}) => ({
     ]
   },
   resolveLoader: {
-    // Replace worker-loader with our own modified version
-    modules: [path.resolve(__dirname, 'src', 'build', 'inline-worker-loader'), 'node_modules'],
+    modules: inlineWorkerLoaderModules
   },
   plugins: [
     ...(buildId ? [new AddBuildIDToOutputPlugin(buildId)] : []),
@@ -97,6 +97,11 @@ const makeWebsite = () => ({
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main']
   },
+  ...(process.env.STANDALONE ? {
+    resolveLoader: {
+      modules: inlineWorkerLoaderModules
+    }
+  } : {}),
   optimization: {
     splitChunks: {
       chunks: 'all'
@@ -133,6 +138,7 @@ const makeWebsite = () => ({
       'process.env.LARGE_ASSET_BASE': JSON.stringify(process.env.LARGE_ASSET_BASE || 'https://packagerdata.turbowarp.org/'),
       'process.env.SCAFFOLDING_BUILD_ID': buildId ? JSON.stringify(buildId) : 'Math.random().toString()',
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.STANDALONE': JSON.stringify(process.env.STANDALONE),
       'process.env.PLAUSIBLE_API': JSON.stringify(process.env.PLAUSIBLE_API),
       'process.env.PLAUSIBLE_DOMAIN': JSON.stringify(process.env.PLAUSIBLE_DOMAIN),
     }),

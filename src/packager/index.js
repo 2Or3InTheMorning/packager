@@ -6,11 +6,13 @@ const app = new P4({
   target: document.getElementById('app')
 });
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register(serviceWorker)
-    .then(() => {
-      console.log('SW registered');
-    }).catch((error) => {
-      console.log('SW error', error);
-    });
+if (!process.env.STANDALONE) {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(serviceWorker)
+      .then(() => {
+        console.log('SW registered');
+      }).catch((error) => {
+        console.log('SW error', error);
+      });
+  }
 }

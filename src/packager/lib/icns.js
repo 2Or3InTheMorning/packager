@@ -21,7 +21,7 @@ const pngToAppleICNS = async (pngData) => {
   const {
     Icns,
     Buffer
-  } = await import(/* webpackChunkName: "icns" */ './icns-bundle');
+  } = require('@fiahfy/icns');
 
   const FORMATS = [
     { type: 'ic04', size: 16 },
